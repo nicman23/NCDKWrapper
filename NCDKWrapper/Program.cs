@@ -13,14 +13,14 @@ namespace NCDKWrapper
                1) Descriptor names (comma delimited)
                2) SDF file names (space delimited)
         */
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             try
             {
                 if (args.Length < 3)
                 {
                     PrintHelp();
-                    return;
+                    return 1;
                 }
                 var descriptorsList = args[1].Split(',');
                 NCDK.QSAR.IMolecularDescriptor[] descriptorInstance = new NCDK.QSAR.IMolecularDescriptor[descriptorsList.Length];
@@ -63,7 +63,9 @@ namespace NCDKWrapper
             catch (Exception ex)
             {
                 Console.WriteLine("Exception has occured: \n" + ex);
+						return (int)2;
             }
+						return (int)0;
         }
         private static void PrintHelp()
         {
