@@ -28,7 +28,6 @@ namespace NCDKWrapper
                 for (int i = 0; i < descriptorsList.Length; i++)
                 {
                     var str = $"NCDK.QSAR.Descriptors.{args[0]}.{descriptorsList[i]}";
-                    // Console.Write(str+"\n");
                     var descriptorType = Type.GetType($"NCDK.QSAR.Descriptors.{args[0]}.{descriptorsList[i]}, NCDK");
                     var paramCount = descriptorType.GetConstructors()[0].GetParameters().Length;
                     descriptorInstance[i] = (IMolecularDescriptor)descriptorType.GetConstructors()[0].Invoke(new object[paramCount]);
@@ -48,10 +47,15 @@ namespace NCDKWrapper
                                 var res = descriptorInstance[z].Calculate(mol);
                                 foreach (var item in res)
                                 {
-                                    Console.Write($"{item.Key}:{item.Value.ToString()} ");
+																		if (z == 0) {
+	                                    Console.Write($"\"{item.Value.ToString()}\"");
+																		}
+                                    Console.Write($",\"{item.Value.ToString()}\"");
+//                                  Console.Write($",\"{item.Key.ToString()}\"");
+//                                  Console.Write($",\"{item.Key}:{item.Value.ToString()}\"");
                                 }
-                                Console.Write("\n");
-                            }                
+                            }
+                            Console.Write("\n");
                         }
                     }
                 }
