@@ -1,5 +1,6 @@
 ﻿using NCDK;
 using NCDK.QSAR;
+using NCDK.Modelings.Builder3D;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace NCDKWrapper
     {
       try
       {
-        if (args.Length < 3)
+        if (args.Length < 2)
         {
           PrintHelp();
           return 1;
@@ -33,16 +34,32 @@ namespace NCDKWrapper
           var paramCount = descriptorType.GetConstructors()[0].GetParameters().Length;
           descriptorInstance[i] = (IMolecularDescriptor)descriptorType.GetConstructors()[0].Invoke(new object[paramCount]);
         }
+        if (args.Length == 2)
+        {
+          Console.Write("\"Name\"");
+          for (int z = 0; z < descriptorsList.Length; z++)
+          {
+            var mol = Chem.MolFromSmiles("COO");
+            var builder = NCDK.Modelings.Builder3D.ModelBuilder3D.GetInstance();
+            var mol_tri = builder.Generate3DCoordinates(mol, false);
+            var res = descriptorInstance[z].Calculate(mol_tri);
+            foreach (var item in res)
+            {
+              Console.Write($",\"{item.Key}\"");
+            }
+          }
+          Console.Write("\n");
+        }
         for (int i = 2; i < args.Length; i++)
         {
           using (var suppl = Chem.SDMolSupplier(args[i]))
           {
             foreach (var mol in suppl)
             {
-              if (mol == null)
-              {
-                continue;
-              }
+//            if (mol == null)
+//            {
+//              continue;
+//            }
               Console.Write($"\"{mol.Title.ToString()}\"");
               for (int z = 0; z < descriptorsList.Length; z++)
               {
